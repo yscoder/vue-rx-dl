@@ -1,8 +1,11 @@
+import Cache from '../cache'
 import { Observable } from 'rxjs/Observable'
 // import _ from 'lodash'
 import 'rxjs/add/observable/fromPromise'
 import 'rxjs/add/observable/dom/webSocket'
 import 'rxjs/add/observable/of'
+
+const Storage = Cache.create()
 
 export class Service {
     obsPromise(promise) {
@@ -15,30 +18,30 @@ export class Service {
 }
 
 export class CacheService extends Service {
-    constructor(key, store) {
+    constructor(promise, key) {
         super()
-        this.store = store
+        this.promise = promise
         this.key = 'CHCHE_' + key.toUpperCase()
     }
 
-    getModel(promise) {
-        const model = this.store.getItem(this.key)
+    getModel() {
+        const model = Storage.get(this.key)
         if(model) {
             return Observable.of(model)
         } else {
-            return this.obsPromise(promise.then(data => {
-                this.store.setItem(this.key, data)
-                return this.store.getItem(this.key)
+            return this.obsPromise(this.promise.then(data => {
+                Storage.save(this.key, data)
+                return Storage.get(this.key)
             }))
         }
     }
 
     updateModel(next) {
-        next(this.store.getItem(this.key))
+        next(Storage.get(this.key))
     }
 
     clearModel() {
-        this.store.delete(this.key)
+        Storage.delete(this.key)
     }
 }
 

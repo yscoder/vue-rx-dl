@@ -1,6 +1,6 @@
 module.exports = [
     {
-        url: '/message',
+        url: '/',
         data: {
             'list|1-10': [{
                 uid: '@id',

@@ -1,8 +1,7 @@
 import MessageApi from '../api/message'
 import { CacheService, SocketService } from './base'
-import storage from '../cache/storage'
 
-const ChatService = new CacheService('chat', storage.SESSION)
+const ChatService = new CacheService(MessageApi.all().then(data => data.list), 'chat')
 const MsgService = new SocketService('ws://localhost:3300')
 
 MsgService.watch(msg => ChatService.updateModel(cache => {
@@ -14,5 +13,5 @@ MsgService.watch(msg => ChatService.updateModel(cache => {
 // 多订阅
 // MsgService.watch(x => console.log(x))
 
-export const getData = () => ChatService.getModel(MessageApi.all().then(data => data.list))
+export const getData = () => ChatService.getModel()
 export const send = item => MsgService.send(item)

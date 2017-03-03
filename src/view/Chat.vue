@@ -14,8 +14,10 @@ export default {
             send(msg)
         }
     },
-    subscriptions: {
-        data: getData()
+    subscriptions() {
+        return {
+            data: getData()
+        }
     }
 }
 </script>
