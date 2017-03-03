@@ -93,7 +93,7 @@ module.exports = [
             data.push({
                 id,
                 name: req.param('name'),
-                tel: req.param('tel'),
+                tel: parseInt(req.param('tel')),
                 deptId: parseInt(req.param('deptId')),
                 enabled: true
             })
@@ -106,7 +106,16 @@ module.exports = [
         url: '/:id',
         method: 'put',
         data: req => {
+            const id = parseInt(req.param('id'))
+            data.forEach(item => {
+                if(item.id === id) {
 
+                }
+            })
+
+            return {
+                code: 1
+            }
         }
     },
     {
