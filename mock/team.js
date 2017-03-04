@@ -1,5 +1,5 @@
 let data = {
-    uid: '666666',
+    uid: 111111,
     name: '团队名称'
 }
 
@@ -12,9 +12,9 @@ module.exports = [
         url: '/:uid',
         method: 'put',
         data: req => {
-            const uid = req.param('uid')
+            const uid = parseInt(req.params.uid)
             if(uid === data.uid) {
-                data.name = req.param('name')
+                data.name = req.body.name
                 return {
                     code: 1
                 }

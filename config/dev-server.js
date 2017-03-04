@@ -4,6 +4,7 @@ const config = require('./webpack.dev.conf')
 const proxyMiddleware = require('http-proxy-middleware')
 const reload = require('reload')
 const http = require('http')
+const bodyParser = require('body-parser')
 
 const app = express()
 const compiler = webpack(config)
@@ -33,6 +34,9 @@ app.use(hotMiddleware)
 
 // serve pure static assets
 app.use('/src', express.static('./src'))
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 // mock router
 require('./mock.routes')(app)

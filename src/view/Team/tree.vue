@@ -13,7 +13,7 @@
 export default {
     props: {
         data: Array,
-        defaultSelected: Number
+        defaultSelected: [Number, String]
     },
     data() {
         return {

@@ -1,16 +1,11 @@
 const Mock = require('mockjs')
 
 let data = [{
-    uid: 11111,
-    name: '团队名称'
-}, {
     uid: 22222,
-    name: '测试',
-    pid: 11111
+    name: '测试'
 }, {
     uid: 33333,
-    name: '研发',
-    pid: 11111
+    name: '研发'
 }, {
     uid: 44444,
     name: '前端',
@@ -32,12 +27,10 @@ module.exports = [
             const uid = Mock.mock('@id')
             data.push({
                 uid,
-                name: req.param('name'),
-                pid: parseInt(req.param('pid'))
+                name: req.body.name,
+                pid: parseInt(req.body.pid)
             })
-            return {
-                uid
-            }
+            return { uid }
         }
     }
 ]

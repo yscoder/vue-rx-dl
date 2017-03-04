@@ -1,14 +1,24 @@
 import axios from 'axios'
 
+const FORM_CONTENT_TYPE = 'application/x-www-form-urlencoded'
+axios.defaults.headers.post['Content-Type'] = FORM_CONTENT_TYPE
+axios.defaults.headers.put['Content-Type'] = FORM_CONTENT_TYPE
+
 const Ajax = axios.create({
     // 公共 HTTP 配置
-    // baseURL: 'https://some-domain.com/api/',
+    // baseURL: 'https://domain.com/api/',
     // timeout: 1000,
     // headers: { 'X-Custom-Header': 'foobar' },
     responseType: 'json'
 })
 
-// Ajax.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+const QS = (params = {}) => {
+    let url = ''
+    Object.keys(params).forEach((k, i) => {
+        url = url + `${i === 0 ? '' : '&'}${k}=${params[k]}`
+    })
+    return url
+}
 
 /**
  * 对常用 Rest 请求格式的封装
@@ -39,7 +49,7 @@ export default class Api {
     }
 
     add(m) {
-        return this.httpWrap(Ajax.post(this.url, m))
+        return this.httpWrap(Ajax.post(this.url, QS(m)))
     }
 
     query(url, params) {
@@ -49,7 +59,7 @@ export default class Api {
     }
 
     update(id, m) {
-        return this.httpWrap(Ajax.put(this.url + id, m))
+        return this.httpWrap(Ajax.put(this.url + id, QS(m)))
     }
 
     delete(id, params) {
@@ -59,6 +69,7 @@ export default class Api {
     }
 
     request(config) {
+        config.url = this.url + (config.url || '')
         return this.httpWrap(Ajax.request(config))
     }
 
