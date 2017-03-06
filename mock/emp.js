@@ -3,73 +3,73 @@ const _ = require('lodash')
 
 let data = [
     {
-        id: '@id',
+        id: 10000,
         tel: /1[3578]\d{9}/,
         name: '@cname',
         enabled: false
     },
     {
-        id: '@id',
+        id: 10001,
         tel: /1[3578]\d{9}/,
         name: '@cname',
         enabled: false
     },
     {
-        id: '@id',
+        id: 10002,
         tel: /1[3578]\d{9}/,
         name: '@cname',
         enabled: true
     },
     {
-        id: '@id',
+        id: 10003,
         tel: /1[3578]\d{9}/,
         name: '@cname',
         enabled: true
     },
     {
-        id: '@id',
+        id: 10004,
         tel: /1[3578]\d{9}/,
         name: '@cname',
         deptId: 22222,
         enabled: true
     },
     {
-        id: '@id',
+        id: 10005,
         tel: /1[3578]\d{9}/,
         name: '@cname',
         deptId: 22222,
         enabled: true
     },
     {
-        id: '@id',
+        id: 10006,
         tel: /1[3578]\d{9}/,
         name: '@cname',
         deptId: 33333,
         enabled: true
     },
     {
-        id: '@id',
+        id: 10007,
         tel: /1[3578]\d{9}/,
         name: '@cname',
         deptId: 44444,
         enabled: true
     },
     {
-        id: '@id',
+        id: 10008,
         tel: /1[3578]\d{9}/,
         name: '@cname',
         deptId: 55555,
         enabled: true
     },
     {
-        id: '@id',
+        id: 10009,
         tel: /1[3578]\d{9}/,
         name: '@cname',
         deptId: 55555,
         enabled: true
     },
     {
-        id: '@id',
+        id: 10010,
         tel: /1[3578]\d{9}/,
         name: '@cname',
         deptId: 44444,
@@ -86,7 +86,7 @@ module.exports = [
         url: '/',
         method: 'post',
         data: req => {
-            const id = Mock.mock('@id')
+            const id = parseInt(Mock.mock('@id'))
             data.push({
                 id,
                 name: req.body.name,
@@ -103,7 +103,7 @@ module.exports = [
         url: '/:id',
         method: 'put',
         data: req => {
-            const id = req.params.id
+            const id = parseInt(req.params.id)
             console.log(req.body)
             const newVal = _.mapValues(req.body, (v, k) => {
                 let r = v
@@ -122,7 +122,7 @@ module.exports = [
         url: '/:id',
         method: 'delete',
         data: req => {
-            const id = req.params.id
+            const id = parseInt(req.params.id)
             _.remove(data, item => item.id === id)
             return { code: 1 }
         }
@@ -131,7 +131,7 @@ module.exports = [
         url: '/',
         method: 'delete',
         data: req => {
-            const idArr = req.params.idArr
+            const idArr = req.query.idArr
             _.remove(data, item => _.includes(idArr, item.id))
             return { code: 1 }
         }

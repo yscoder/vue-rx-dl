@@ -17,6 +17,15 @@ export const updateEmp = (emp) => EmpApi.update(emp.id, _.omit(emp, ['id'])).the
     return msg
 })
 export const deleteEmp = idArr => EmpApi.deleteMultiple(idArr).then(msg => {
-    EmpService.updateModel(cache => _.remove(cache, item => _.includes(idArr, item.id)))
+    EmpService.updateModel(cache => {
+        idArr.forEach(id => cache.splice(_.findIndex(cache, item => item.id === id), 1))
+    })
     return msg
 })
+export const updateEmpDept = (idArr, deptId) => {
+    EmpService.updateModel(cache => cache.forEach(emp => {
+        if(_.includes(idArr, emp.id)) {
+            emp.deptId = deptId
+        }
+    }))
+}

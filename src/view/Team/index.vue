@@ -8,7 +8,8 @@
         <el-col :span="18">
             <navHd :items="navPath" @updateTeam="updateTeamHandle"></navHd>
             <childDept :childs="curChilds" @addDept="addDeptHandle"></childDept>
-            <empList :data="filterEmps" @delete="deleteMult"></empList>
+            <empList :data="filterEmps" :treeData="treeData"
+                @updateDept="updateEmpDept" @delete="deleteMult"></empList>
         </el-col>
     </el-row>
 </template>
@@ -18,7 +19,7 @@ import navHd from './navHd'
 import childDept from './childDept'
 import empList from './emp'
 import { getDepts, addDept } from 'src/service/dept'
-import { getEmps, deleteEmp } from 'src/service/emp'
+import { getEmps, deleteEmp, updateEmpDept } from 'src/service/emp'
 import { getTeam, updateTeam } from 'src/service/team'
 import _ from 'lodash'
 
@@ -111,6 +112,9 @@ export default {
             deleteEmp(idArr).then(msg => {
 
             })
+        },
+        updateEmpDept(idArr, deptId) {
+            updateEmpDept(idArr, deptId)
         }
     }
 }
