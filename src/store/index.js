@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import mutations from './mutations'
 import actions from './actions'
 import wsPlugin from './wsPlugin'
+import task from './modules/task'
 
 Vue.use(Vuex)
 
@@ -17,5 +18,8 @@ export default new Vuex.Store({
             return state.msgList
         }
     },
-    plugins: [wsPlugin()]
+    plugins: [wsPlugin()],
+    modules: [
+        task
+    ]
 })

@@ -80,7 +80,7 @@ let data = [
 module.exports = [
     {
         url: '/',
-        data: data
+        data: req => data
     },
     {
         url: '/',
@@ -109,6 +109,9 @@ module.exports = [
                 let r = v
                 if(k === 'deptId') {
                     r = parseInt(r)
+                }
+                if(k === 'enabled') {
+                    r = r !== 'false'
                 }
                 return r
             })

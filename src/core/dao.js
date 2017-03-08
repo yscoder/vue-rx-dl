@@ -1,67 +1,83 @@
 import EventBus from './eventBus'
 import Api from '../api/base'
-import { Observable } from 'rxjs/Observable'
 import _ from 'lodash'
-import 'rxjs/add/observable/fromPromise'
-import 'rxjs/add/observable/of'
-import 'rxjs/add/operator/map'
 
 export default class DAO extends EventBus {
-    constructor(name) {
+    constructor(name, { cached, key }) {
         super()
         this.data = new Map()
+        this.name = name
         this.api = Api.create('/' + name)
-        window[name + 'Data'] = this.data
+        this.cached = cached
+        this.key = key
     }
 
     get length() {
         return this.data.size
     }
 
-    one(id) {
-        if(this.data.has(id)) {
-            return Observable.of(this.data.get(id))
+    saveModel(data) {
+        if(data instanceof Array) {
+            data.forEach(item => this.saveModel(item))
         } else {
-            return Observable.fromPromise(this.api.one(id))
+            this.updateModel(data)
         }
+    }
+
+    one(id) {
+        if(!this.cached || this.data.has(id)) {
+            return Promise.resolve(this.data.get(id))
+        }
+        return this.api.one(id).then(data => {
+            this.saveModel(data)
+            return this.one(id)
+        })
     }
     // todo: save
     list(params) {
-        if(this.length === 0) {
-            return Observable.fromPromise(this.api.all(params))
+        if(!this.cached || this.length === 0) {
+            return this.api.all(params).then(data => {
+                this.saveModel(data)
+                return this.list(params)
+            })
         }
         if(!params) {
-            return Observable.of(this.data).map(data => [...data.values()])
+            return Promise.resolve([...this.data.values()])
         }
-        return Observable.of(this.data).map(data => _.filter([...data.values()], params))
+        // return Observable.of(this.data).map(data => _.filter([...data.values()], params))
+        return this.list().then(data => {
+            return _.filter(data, item => _.isEqual(params, _.pick(item, Object.keys(params))))
+        })
     }
 
-    _updateModel(id, item) {
-        let data = this.data.get(id)
+    updateModel(item) {
+        let key = item[this.key]
+        let data = this.data.get(key)
         if(!data) {
-            this.data.set(id, item)
+            this.data.set(key, item)
             return
         }
-        this.data.set(id, Object.assign({}, data, item))
+        this.data.set(key, Object.assign(data, item))
     }
 
-    _emitter(type, ...args) {
-        this.emit(type, args)
+    emitter(type, ...args) {
+        this.emit(name + ':' + type, args)
     }
 
     insert(item) {
         return this.api.add(item).then(msg => {
             item.id = msg
-            this._updateModel(item)
-            this._emitter('insert', item)
+            this.updateModel(item)
+            this.emitter('insert', item)
             return item
         })
     }
 
     update(id, params) {
         return this.api.update(id, params).then(msg => {
-            this._updateModel(id, params)
-            this._emitter('update', Object.assign({}, params, {id}))
+            let item = Object.assign({}, params, {id})
+            this.updateModel(item)
+            this.emitter('update', item)
             return msg
         })
     }
@@ -69,7 +85,7 @@ export default class DAO extends EventBus {
     delete(id) {
         return this.api.delete(id).then(msg => {
             this.data.delete(id)
-            this._emitter('delete', id)
+            this.emitter('delete', id)
             return msg
         })
     }

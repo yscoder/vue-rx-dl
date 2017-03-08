@@ -5,7 +5,8 @@
             {{task.name}}
         </el-form-item>
         <el-form-item label="成员">
-           <el-tag v-for="item in task.members">{{item.name}}</el-tag>
+           <el-tag v-for="item in task.members"
+            :type="item.enabled ? 'primary' : ''">{{item.name}}</el-tag>
         </el-form-item>
     </el-form>
 </template>
