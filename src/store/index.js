@@ -9,13 +9,16 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        msgList: []
+        userList: []
     },
     mutations,
     actions,
     getters: {
-        msgList(state) {
-            return state.msgList
+        userList(state) {
+            return state.userList
+        },
+        loginUser(state) {
+            return state.userList.length ? state.userList.find(u => u.id === 10002) : {}
         }
     },
     plugins: [wsPlugin()],

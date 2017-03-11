@@ -42,3 +42,6 @@ export const POST = (url, params) => HTTP_WRAP(Ajax.post(url, params))
 export const PUT = (url, params) => HTTP_WRAP(Ajax.put(url, params))
 export const DELETE = (url, params) => HTTP_WRAP(Ajax.delete(url, { params }))
 export const REQUEST = config => HTTP_WRAP(Ajax.request(config))
+export const ALL = promises => Ajax.all(promises).then(
+    Ajax.spread((...args) => args)
+)

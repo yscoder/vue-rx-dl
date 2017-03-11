@@ -2,5 +2,5 @@
 export default {
     teams: '/team',
     projects: '/project',
-    user: '/user'
+    users: '/emp'
 }

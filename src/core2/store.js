@@ -10,10 +10,9 @@ let PARAM_CACHE = new Map()
 
 function handel(k, url) {
     let obj = {}
-    let ufKey = _.upperFirst('k')
 
     // getXxx(params)
-    obj['get' + ufKey] = params => {
+    obj.get = params => {
         let prevParams = PARAM_CACHE.get(k)
         // 增加执行间隔，避免短时间内重复请求
         const throttled = _.throttle(() => {
@@ -38,10 +37,14 @@ function handel(k, url) {
 
     // setXxx(callback)
     // 在回调中对缓存进行修改操作，只修改数据，避免变更引用
-    obj['set' + ufKey] = next => next(CACHE[k])
+    obj.set = next => next(CACHE[k])
 
     PARAM_CACHE.set(k, {})
     return obj
 }
 
-export default Object.keys(config).map(k => handel(k, config[k]))
+Object.keys(config).forEach(k => {
+    config[k] = handel(k, config[k])
+})
+
+export default config

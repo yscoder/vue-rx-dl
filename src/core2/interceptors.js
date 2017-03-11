@@ -1,7 +1,7 @@
 import Store from './store'
 // import _ from 'lodash'
 
-const beforeRequest = [
+export const beforeRequest = [
     // {
     //     url: '/aaa',
     //     method: 'get',
@@ -11,7 +11,7 @@ const beforeRequest = [
     // }
 ]
 
-const afterResponse = [{
+export const afterResponse = [{
     url: '/user',
     method: 'post',  // default: get
     handle: res => {
@@ -20,8 +20,3 @@ const afterResponse = [{
         })
     }
 }]
-
-export default {
-    beforeRequest,
-    afterResponse
-}
